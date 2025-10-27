@@ -72,9 +72,31 @@ function solve(model::MySimulatedAnnealingMinimumVariancePortfolioAllocationProb
     while has_converged == false
     
         accepted_counter = 0; 
+
+        for i in 1:K
+
+            candidate_w = current_w + β*randn(length(w));
+            candidate_f = _objective_function(candidate_w, ḡ, Σ̂, R, μ, ρ);
+
+            if candidate_f < current_f || rand() < exp((current_f - candidate_f) / T)
+                current_w = candidate_w;
+                current_f = candidate_f;
+                accepted_counter += 1;
+
+                if (current_f < f_best)
+                    w_best = current_w;
+                    f_best = current_f;
+                
+                end
+
+            end
+
+
+
+        end
         
         # TODO: Implement simulated annealing logic here -
-        throw(ErrorException("Oooops! Simulated annealing logic not yet implemented!!"));
+        # throw(ErrorException("Oooops! Simulated annealing logic not yet implemented!!"));
 
         # update KL -
         fraction_accepted = accepted_counter/KL; # what is the fraction of accepted moves
